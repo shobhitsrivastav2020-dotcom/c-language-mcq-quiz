@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shobhit Quiz - C Programming</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0b1020;
+  color: white;
+  padding: 20px;
+}
+.container {
+  max-width: 700px;
+  margin: 30px auto;
+  background: #172033;
+  padding: 25px;
+  border-radius: 15px;
+}
+h1 { color: #67e8f9; }
+.option {
+  display: block;
+  background: #26344d;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+button {
+  padding: 12px 20px;
+  margin: 8px 5px 0 0;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#next { background: #22d3ee; }
+#check { background: #4ade80; }
+#message { margin-top: 20px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Shobhit Quiz</h1>
+  <p>C Programming MCQ Practice</p>
+
+  <p id="number"></p>
+  <h3 id="question"></h3>
+  <div id="options"></div>
+
+  <button id="check" onclick="checkAnswer()">Check Answer</button>
+  <button id="next" onclick="nextQuestion()">Next Question</button>
+
+  <p id="message"></p>
+  <h3 id="score"></h3>
+</div>
+
+<script>
+const questions = [
+{
+ q: "Which function is the entry point of a C program?",
+ o: ["start()", "main()", "run()", "begin()"],
+ a: 1
+},
+{
+ q: "Which header file is used for printf()?",
+ o: ["math.h", "string.h", "stdio.h", "stdlib.h"],
+ a: 2
+},
+{
+ q: "Which symbol ends a normal C statement?",
+ o: [".", ":", ";", ","],
+ a: 2
+},
+{
+ q: "Which keyword declares an integer?",
+ o: ["float", "int", "char", "void"],
+ a: 1
+},
+{
+ q: "Which operator checks equality?",
+ o: ["=", "==", "!=", ">"],
+ a: 1
+},
+{
+ q: "What is the output of 5 + 3?",
+ o: ["2", "8", "15", "53"],
+ a: 1
+},
+{
+ q: "Which function displays output?",
+ o: ["scanf()", "input()", "printf()", "read()"],
+ a: 2
+},
+{
+ q: "Which operator means logical AND?",
+ o: ["||", "!", "&&", "=="],
+ a: 2
+},
+{
+ q: "Which statement is used for decision-making?",
+ o: ["if", "include", "printf", "return only"],
+ a: 0
+},
+{
+ q: "What happens when an if condition is true?",
+ o: ["Its statement runs", "Program always stops", "Error always occurs", "Nothing runs"],
+ a: 0
+}
+];
+
+let current = 0;
+let selected = null;
+let checked = false;
+let score = 0;
+let answered = [];
+
+function showQuestion() {
+  selected = null;
+  checked = false;
+
+  const q = questions[current];
+  document.getElementById("number").textContent =
+    "Question " + (current + 1) + " of " + questions.length;
+
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("options").innerHTML = "";
+  document.getElementById("message").textContent = "";
+  document.getElementById("score").textContent = "Score: " + score;
+
+  q.o.forEach((option, index) => {
+    const label = document.createElement("label");
+    label.className = "option";
+
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "answer";
+    radio.value = index;
+
+    radio.onchange = () => {
+      selected = index;
+    };
+
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(" " + option));
+    document.getElementById("options").appendChild(label);
+  });
+}
+
+function checkAnswer() {
+  if (checked) return;
+
+  if (selected === null) {
+    document.getElementById("message").textContent =
+      "Please select an answer first.";
+    return;
+  }
+
+  checked = true;
+
+  if (selected === questions[current].a) {
+    score++;
+    document.getElementById("message").textContent =
+      "Correct answer! Well done.";
+  } else {
+    document.getElementById("message").textContent =
+      "Wrong answer. Correct answer: " +
+      questions[current].o[questions[current].a];
+  }
+
+  answered[current] = true;
+  document.getElementById("score").textContent = "Score: " + score;
+}
+
+function nextQuestion() {
+  if (!checked) {
+    document.getElementById("message").textContent =
+      "Please check your answer first.";
+    return;
+  }
+
+  if (current < questions.length - 1) {
+    current++;
+    showQuestion();
+  } else {
+    document.querySelector(".container").innerHTML =
+      "<h1>Quiz Completed!</h1>" +
+      "<h2>Your Score: " + score + " / " + questions.length + "</h2>" +
+      "<button onclick='location.reload()'>Restart Quiz</button>";
+  }
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
